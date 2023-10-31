@@ -63,7 +63,13 @@ function App() {
     setUpdateData(newEntry)
   };
 
-  const updateTask = () => {};
+  const updateTask = () => {
+    let filterRecords = [...toDo].filter(task => 
+      task.id !== updateData.id)
+    let upddatedObject = [...filterRecords, updateData]
+    setToDo(upddatedObject)
+    setUpdateData("")
+  };
 
   return (
     <div className="container">
@@ -72,18 +78,26 @@ function App() {
       <br />
 
       {/* Update Task Form */}
-      <div className="row">
+      {updateData ? (
+        <>
+          <div className="row">
         <div className="col">
           <input value={updateData && updateData.title} type="text" className="form-control form-control-lg" 
           onChange={(e) => changeTask(e)}/>
         </div>
         <div className="col-auto">
-          <button className="btn btn-lg btn-success mr-20">Update</button>
-          <button className="btn btn-lg btn-warning">Cancel</button>
+          <button 
+          onClick={updateTask}
+          className="btn btn-lg btn-success mr-20">Update</button>
+          <button 
+          onClick={cancelUpdate}
+          className="btn btn-lg btn-warning">Cancel</button>
         </div>
       </div>
-      <br />
-
+      <br /> 
+        </>
+      ) : (
+      <>
       {/* Add Task Form */}
       <div className="row">
         <div className="col">
@@ -101,7 +115,9 @@ function App() {
         </div>
       </div>
       <br />
-
+      </>
+      )}
+      
       {toDo && toDo.length ? "" : "No Tasks!"}
       {toDo &&
         toDo
