@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddTask from "./components/AddTask";
 import UpdateTask from "./components/UpdateTask";
 import ToDo from "./components/ToDo";
@@ -6,9 +6,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
-  const [toDo, setToDo] = useState([]);
+  const [toDo, setToDo] = useState(() => {
+    let savedTasks = JSON.parse(localStorage.getItem("todos"))
+    return savedTasks || ""
+  });
   const [newTask, setNewTask] = useState("");
   const [updateData, setUpdateData] = useState("");
+
+  useEffect(() => {
+    let ignore = false
+    const setToDoTasks = () => {
+      if(!ignore) {
+        localStorage.setItem("todos", JSON.stringify(toDo))
+      }
+    }
+    setToDoTasks()
+      return () => {
+        ignore = true
+      }
+  }, [toDo])
 
   const addTask = () => {
     if (newTask) {
